@@ -33,10 +33,14 @@ public class ParkingLot {
         if (isEmpty()) {
             throw new EmptyParkingLotException("parkingLot is empty");
         }
-        if(!(vehicles.contains(vehicle))){
+        if (isPresent(vehicle)) {
             throw new VehicleNotFoundExcepttion("vehicle not found");
         }
+        vehicles.remove(vehicle);
+    }
 
+    private boolean isPresent(Object vehicle) {
+        return !(vehicles.contains(vehicle));
     }
 
     private boolean isEmpty() {
