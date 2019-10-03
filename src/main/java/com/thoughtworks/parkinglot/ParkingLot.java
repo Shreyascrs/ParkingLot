@@ -1,5 +1,6 @@
 package com.thoughtworks.parkinglot;
 
+import com.thoughtworks.parkinglot.exception.EmptyParkingLotException;
 import com.thoughtworks.parkinglot.exception.ParkingLotFullException;
 import com.thoughtworks.parkinglot.exception.VehicleAlreadyParkedException;
 
@@ -26,6 +27,15 @@ public class ParkingLot {
             throw new VehicleAlreadyParkedException("vehicle already parked");
         }
         vehicles.add(object);
+    }
+
+    public void unPark(Object vehicle) throws EmptyParkingLotException {
+        if (isEmpty())
+            throw new EmptyParkingLotException("parkingLot is empty");
+    }
+
+    private boolean isEmpty() {
+        return vehicles.size() == 0;
     }
 
     private boolean isParked(Object object) {
