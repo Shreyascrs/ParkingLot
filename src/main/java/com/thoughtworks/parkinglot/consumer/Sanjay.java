@@ -37,10 +37,10 @@ public class Sanjay {
     }
 
     public static void main(String[] args) throws ParkingLotFullException {
-        ParkingLot one = new ParkingLot(2);
-        ParkingLot two = new ParkingLot(3);
-
-        Sanjay.park(one, two);
-        //Sanjay2.park(one,two);
+//        ParkingLot one = new ParkingLot(2, owner);
+//        ParkingLot two = new ParkingLot(3, owner);
+//
+//        Sanjay.park(one, two);
+//        //Sanjay2.park(one,two);
     }
 }

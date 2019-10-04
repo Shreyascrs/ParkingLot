@@ -1,6 +1,5 @@
 package com.thoughtworks.parkinglot;
 
-import com.thoughtworks.parkinglot.exception.EmptyParkingLotException;
 import com.thoughtworks.parkinglot.exception.ParkingLotFullException;
 import com.thoughtworks.parkinglot.exception.VehicleAlreadyParkedException;
 
@@ -10,11 +9,13 @@ import java.util.Set;
 public class ParkingLot {
 
     private int capacity;
+    private Owner owner;
 
     Set<Object> vehicles = new HashSet<>();
 
-    public ParkingLot(int capacity) {
+    public ParkingLot(int capacity, Owner owner) {
         this.capacity = capacity;
+        this.owner = owner;
     }
 
 
@@ -27,6 +28,13 @@ public class ParkingLot {
             throw new VehicleAlreadyParkedException("vehicle already parked");
         }
         vehicles.add(object);
+        if(isFull(capacity)){
+            owner.notify("parking lot is full");
+        }
+    }
+
+    private boolean isFull(int capacity) {
+        return vehicles.size() == capacity;
     }
 
     public Object unPark(Object vehicle) throws  VehicleNotFoundExcepttion {
