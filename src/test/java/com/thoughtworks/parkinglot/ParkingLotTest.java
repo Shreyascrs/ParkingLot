@@ -7,12 +7,12 @@ import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class ParkingLotTest {
 
-    Owner owner=new Owner();
+    Owner owner = new Owner();
 
-    @Mock
-    ParkingLot parkingLotm=new ParkingLot(1,new Owner());
+    ParkingLot parkingLotm = new ParkingLot(1, new Owner());
 
     @Test
     void givenParkingLot_WhenPark_ThenMustPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
@@ -79,10 +79,22 @@ class ParkingLotTest {
         assertEquals(exception.getMessage(), "vehicle not found");
     }
 
+    class DummyOwner extends Owner {
+
+        private int count=0;
+        private String message;
+
+        @Override
+        public void notify(String message) {
+            this.message = message;
+            count++;
+        }
+    }
+
     @Test
     void givenParkingLotWithTwoVehicles_WhenUnpark_ThenUnpark() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
-        Owner owner=new Owner();
-        ParkingLot parkingLot = new ParkingLot(3,owner);
+        Owner owner = new Owner();
+        ParkingLot parkingLot = new ParkingLot(3, owner);
         Object vehicle1 = new Object();
         Object vehicle2 = new Object();
 
@@ -96,10 +108,35 @@ class ParkingLotTest {
 
     @Test
     void givenParkingLotfull_WhenPark_ThenOwnerMustGetMessage() throws VehicleAlreadyParkedException, ParkingLotFullException {
-        Owner owner=new Owner();
-        ParkingLot parkingLot = new ParkingLot(1,owner);
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(1, owner);
 
         parkingLot.park(new Object());
+        assertEquals("parking lot is full", owner.message);
+
+    }
+
+    @Test
+    void givenParkingLotfull_WhenPark_ThenhowManyTimesMethodCalled() throws VehicleAlreadyParkedException, ParkingLotFullException {
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(1, owner);
+
+        parkingLot.park(new Object());
+        assertEquals(1, owner.count);
+
+    }
+
+    @Test
+    void givenParkingLotfullParkedAndUnParked_WhenPark_ThenhowManyTimesMethodCalled() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(1, owner);
+        Object vechicle=new Object();
+
+        parkingLot.park(vechicle);
+        parkingLot.unPark(vechicle);
+        parkingLot.park(vechicle);
+
+        assertEquals(2, owner.count);
 
     }
 }
