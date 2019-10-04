@@ -41,16 +41,6 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithNoVehicals_WhenUnPark_ThenMustNotUnPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
-        ParkingLot parkingLot = new ParkingLot(0);
-
-        Object vehicle = new Object();
-
-        Throwable exception = assertThrows(EmptyParkingLotException.class, () -> parkingLot.unPark(vehicle));
-        assertEquals(exception.getMessage(), "parkingLot is empty");
-    }
-
-    @Test
     void givenParkingLotWithOneVehicleAndGivenOtherVehicleToUnpark_WhenUnPark_ThenMustNotUnPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
         ParkingLot parkingLot = new ParkingLot(1);
         Object vehicle = new Object();
@@ -61,15 +51,24 @@ class ParkingLotTest {
         assertEquals(exception.getMessage(), "vehicle not found");
     }
 
+    void givenParkingLotWithOneVehicle_WhenUnPark_ThenMustUnPark() throws ParkingLotFullException, VehicleAlreadyParkedException, VehicleNotFoundExcepttion {
+        ParkingLot parkingLot = new ParkingLot(1);
+        Object vehicle = new Object();
+
+        parkingLot.park(vehicle);
+
+        assertEquals(vehicle, parkingLot.unPark(vehicle));
+    }
+
     @Test
-    void givenParkingLotWithOneVehicle_WhenUnPark_ThenMustUnPark() throws ParkingLotFullException, VehicleAlreadyParkedException, EmptyParkingLotException, VehicleNotFoundExcepttion {
+    void givenParkingLotWithOneVehicleMustUnparkAndOnceAgainUnpark_WhenUnPark_ThenMustThrowException() throws ParkingLotFullException, VehicleAlreadyParkedException, VehicleNotFoundExcepttion {
         ParkingLot parkingLot = new ParkingLot(1);
         Object vehicle = new Object();
 
         parkingLot.park(vehicle);
         parkingLot.unPark(vehicle);
 
-        Throwable exception = assertThrows(EmptyParkingLotException.class, () -> parkingLot.unPark(vehicle));
-        assertEquals(exception.getMessage(), "parkingLot is empty");
+        Throwable exception = assertThrows(VehicleNotFoundExcepttion.class, () -> parkingLot.unPark(vehicle));
+        assertEquals(exception.getMessage(), "vehicle not found");
     }
 }

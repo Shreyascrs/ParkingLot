@@ -29,14 +29,13 @@ public class ParkingLot {
         vehicles.add(object);
     }
 
-    public void unPark(Object vehicle) throws EmptyParkingLotException, VehicleNotFoundExcepttion {
-        if (isEmpty()) {
-            throw new EmptyParkingLotException("parkingLot is empty");
-        }
+    public Object unPark(Object vehicle) throws  VehicleNotFoundExcepttion {
+
         if (isPresent(vehicle)) {
             throw new VehicleNotFoundExcepttion("vehicle not found");
         }
         vehicles.remove(vehicle);
+        return vehicle;
     }
 
     private boolean isPresent(Object vehicle) {
