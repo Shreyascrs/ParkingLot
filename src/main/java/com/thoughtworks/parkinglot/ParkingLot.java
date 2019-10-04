@@ -42,6 +42,11 @@ public class ParkingLot {
         if (isPresent(vehicle)) {
             throw new VehicleNotFoundExcepttion("vehicle not found");
         }
+        if(isFull(capacity)) {
+            vehicles.remove(vehicle);
+            owner.notify("parking lot is not full");
+            return vehicle;
+        }
         vehicles.remove(vehicle);
         return vehicle;
     }

@@ -127,16 +127,29 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotfullParkedAndUnParked_WhenPark_ThenhowManyTimesMethodCalled() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
+    void givenParkingLotFullParkedAndUnParked_WhenPark_ThenhowManyTimesMethodCalled() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
         DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(1, owner);
-        Object vechicle=new Object();
+        Object vehicle=new Object();
 
-        parkingLot.park(vechicle);
-        parkingLot.unPark(vechicle);
-        parkingLot.park(vechicle);
+        parkingLot.park(vehicle);
+        parkingLot.unPark(vehicle);
+        parkingLot.park(vehicle);
 
-        assertEquals(2, owner.count);
+        assertEquals(3, owner.count);
 
     }
+
+    @Test
+    void givenWhenTheParkingLotIsFullWhenVehicleRemoved_WhenUnPark_ThenSendNotification() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
+        DummyOwner owner=new DummyOwner();
+        ParkingLot parkingLot=new ParkingLot(1,owner);
+        Object vehicle=new Object();
+
+        parkingLot.park(vehicle);
+        parkingLot.unPark(vehicle);
+
+        assertEquals("parking lot is not full",owner.message);
+    }
+
 }
