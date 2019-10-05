@@ -3,16 +3,14 @@ package com.thoughtworks.parkinglot;
 import com.thoughtworks.parkinglot.exception.ParkingLotFullException;
 import com.thoughtworks.parkinglot.exception.VehicleAlreadyParkedException;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class ParkingLotTest {
 
-    Owner owner = new Owner();
+    Person owner = new Person();
 
-    ParkingLot parkingLotm = new ParkingLot(1, new Owner());
 
     @Test
     void givenParkingLot_WhenPark_ThenMustPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
@@ -79,21 +77,40 @@ class ParkingLotTest {
         assertEquals(exception.getMessage(), "vehicle not found");
     }
 
-    class DummyOwner extends Owner {
+    class DummyOwner extends Person {
 
-        private int count=0;
-        private String message;
+        private int messageWhenFull;
+        private int messageWhenEmpty;
 
         @Override
-        public void notify(String message) {
-            this.message = message;
-            count++;
+        public void notifyWhenFull() {
+            messageWhenFull++;
+        }
+
+        @Override
+        public void notifyWhenEmpty() {
+            messageWhenEmpty++;
+        }
+    }
+
+    class SecurityGuard extends Person {
+
+        private int messageWhenFull;
+        private int messageWhenEmpty;
+
+        @Override
+        public void notifyWhenFull() {
+            messageWhenFull++;
+        }
+
+        @Override
+        public void notifyWhenEmpty() {
+            messageWhenEmpty++;
         }
     }
 
     @Test
     void givenParkingLotWithTwoVehicles_WhenUnpark_ThenUnpark() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
-        Owner owner = new Owner();
         ParkingLot parkingLot = new ParkingLot(3, owner);
         Object vehicle1 = new Object();
         Object vehicle2 = new Object();
@@ -107,49 +124,101 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotfull_WhenPark_ThenOwnerMustGetMessage() throws VehicleAlreadyParkedException, ParkingLotFullException {
+    void givenParkingLotfull_WhenPark_ThenOwnerMustGetMessage() throws Exception{
         DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(1, owner);
 
         parkingLot.park(new Object());
-        assertEquals("parking lot is full", owner.message);
 
     }
 
     @Test
-    void givenParkingLotfull_WhenPark_ThenhowManyTimesMethodCalled() throws VehicleAlreadyParkedException, ParkingLotFullException {
+    void givenParkingLotfull_WhenPark_ThenhowManyTimesMethodCalled() throws Exception{
         DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(1, owner);
 
         parkingLot.park(new Object());
-        assertEquals(1, owner.count);
+        assertEquals(1, owner.messageWhenFull);
 
     }
 
     @Test
-    void givenParkingLotFullParkedAndUnParked_WhenPark_ThenhowManyTimesMethodCalled() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
+    void givenParkingLotFullParkedAndUnParked_WhenPark_ThenhowManyTimesMethodCalled() throws Exception{
         DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(1, owner);
-        Object vehicle=new Object();
+        Object vehicle = new Object();
 
         parkingLot.park(vehicle);
         parkingLot.unPark(vehicle);
         parkingLot.park(vehicle);
 
-        assertEquals(3, owner.count);
+        assertEquals(2, owner.messageWhenFull);
+        assertEquals(1, owner.messageWhenEmpty);
 
     }
 
     @Test
-    void givenWhenTheParkingLotIsFullWhenVehicleRemoved_WhenUnPark_ThenSendNotification() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
-        DummyOwner owner=new DummyOwner();
-        ParkingLot parkingLot=new ParkingLot(1,owner);
-        Object vehicle=new Object();
+    void givenWhenTheParkingLotIsFullWhenVehicleRemoved_WhenUnPark_ThenSendNotification() throws Exception{
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(1, owner);
+        Object vehicle = new Object();
 
         parkingLot.park(vehicle);
         parkingLot.unPark(vehicle);
 
-        assertEquals("parking lot is not full",owner.message);
+    }
+
+    @Test
+    void givenWhenTheParkingLotIsFullWhenVehicleremoved_WhenunPark_ThenSendNotification() throws Exception{
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(4, owner);
+
+
+        Object vehicle1 = new Object();
+        Object vehicle2 = new Object();
+        Object vehicle3 = new Object();
+        Object vehicle4 = new Object();
+
+        //adding vehicle
+        parkingLot.park(vehicle1);
+        parkingLot.park(vehicle2);
+        parkingLot.park(vehicle3);
+        parkingLot.park(vehicle4);  //must recive notification count=1
+
+        assertEquals(1, owner.messageWhenFull);
+
+        //removeing vehicle
+        parkingLot.unPark(vehicle1); //must recive a notification count=2
+        parkingLot.unPark(vehicle2); //no notification will trigger to owner
+
+        assertEquals(1, owner.messageWhenEmpty);
+    }
+
+    @Test
+    void givenWhenTheParkingLotIsFullWhenVehicleremoved_WhenUnPark_ThenSendNotification() throws Exception{
+        DummyOwner owner = new DummyOwner();
+        SecurityGuard securityGuard=new SecurityGuard();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
+
+        Object firstVehicle = new Object();
+        Object secondVehicle = new Object();
+
+        //to add a person
+        parkingLot.register(securityGuard);
+
+        //adding vehicle
+        parkingLot.park(firstVehicle);
+        parkingLot.park(secondVehicle); //must recive notification count=1
+
+        assertEquals(1, owner.messageWhenFull);
+        assertEquals(1, securityGuard.messageWhenFull);
+
+        //removing vehicle
+        parkingLot.unPark(firstVehicle); //must recive a notification count=2
+        parkingLot.unPark(secondVehicle); //no notification will trigger to owner
+
+        assertEquals(1, owner.messageWhenEmpty);
+        assertEquals(1, securityGuard.messageWhenEmpty);
     }
 
 }

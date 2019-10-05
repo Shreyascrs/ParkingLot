@@ -3,19 +3,23 @@ package com.thoughtworks.parkinglot;
 import com.thoughtworks.parkinglot.exception.ParkingLotFullException;
 import com.thoughtworks.parkinglot.exception.VehicleAlreadyParkedException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class ParkingLot {
+public class ParkingLot implements IParkingLotObserver {
 
     private int capacity;
-    private Owner owner;
+    private Person owner;
 
+    List<Person> notifiers;
     Set<Object> vehicles = new HashSet<>();
 
-    public ParkingLot(int capacity, Owner owner) {
+    public ParkingLot(int capacity, Person owner) {
         this.capacity = capacity;
         this.owner = owner;
+        notifiers = new ArrayList<>();
     }
 
 
@@ -28,8 +32,11 @@ public class ParkingLot {
             throw new VehicleAlreadyParkedException("vehicle already parked");
         }
         vehicles.add(object);
-        if(isFull(capacity)){
-            owner.notify("parking lot is full");
+        if (isFull(capacity)) {
+            owner.notifyWhenFull();
+            for (Person p : notifiers) {
+                p.notifyWhenFull();
+            }
         }
     }
 
@@ -37,14 +44,17 @@ public class ParkingLot {
         return vehicles.size() == capacity;
     }
 
-    public Object unPark(Object vehicle) throws  VehicleNotFoundExcepttion {
+    public Object unPark(Object vehicle) throws VehicleNotFoundExcepttion {
 
         if (isPresent(vehicle)) {
             throw new VehicleNotFoundExcepttion("vehicle not found");
         }
-        if(isFull(capacity)) {
+        if (isFull(capacity)) {
             vehicles.remove(vehicle);
-            owner.notify("parking lot is not full");
+            owner.notifyWhenEmpty();
+            for (Person p : notifiers) {
+                p.notifyWhenEmpty();
+            }
             return vehicle;
         }
         vehicles.remove(vehicle);
@@ -65,5 +75,10 @@ public class ParkingLot {
 
     protected boolean isParkingLotFull() {
         return vehicles.size() >= capacity;
+    }
+
+    @Override
+    public void register(Object object) {
+        notifiers.add((Person) object);
     }
 }
