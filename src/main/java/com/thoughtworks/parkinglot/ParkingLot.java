@@ -11,9 +11,9 @@ import java.util.Set;
 // TODO - make it green
 public class ParkingLot {
 
-    private int capacity;
+    private final int capacity;
 
-    public int getCapacity() {
+    int getCapacity() {
         return capacity;
     }
 
@@ -64,7 +64,7 @@ public class ParkingLot {
     }
 
     private boolean isCapacityFull() {
-        return subscriber.size()==capacity-1;
+        return vehicles.size()==capacity-1;
     }
 
     private void notifyWhenEmpty() {
@@ -90,7 +90,10 @@ public class ParkingLot {
     }
 
     public void unSubscribe(INotification notifier) throws PersonNotSubscribed {
-
-        subscriber.remove(notifier);
+        if(subscriber.contains(notifier))
+        {subscriber.remove(notifier);}
+        else {
+            throw new PersonNotSubscribed();
+        }
     }
 }

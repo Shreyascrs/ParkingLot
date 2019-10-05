@@ -11,6 +11,9 @@ public class Attendant {
     }
 
     public void park(Object vehicle) throws Exception {
-        secondParkingLot.park(vehicle);
+        if (firstParkingLot.getCapacity() < secondParkingLot.getCapacity()) {
+            secondParkingLot.park(vehicle);
+        }
+        firstParkingLot.park(vehicle);
     }
 }

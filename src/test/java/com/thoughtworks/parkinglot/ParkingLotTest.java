@@ -34,8 +34,7 @@ class ParkingLotTest {
 
         parkingLot.park(new Object());
 
-        Throwable exception = assertThrows(ParkingLotFullException.class, () -> parkingLot.park(new Object()));
-        assertEquals(exception.getMessage(), "parking Lot is Full");
+        assertThrows(ParkingLotFullException.class, () -> parkingLot.park(new Object()));
     }
 
     @Test
@@ -49,8 +48,7 @@ class ParkingLotTest {
 
         parkingLot.park(vehicle);
 
-        Throwable exception = assertThrows(VehicleAlreadyParkedException.class, () -> parkingLot.park(vehicle));
-        assertEquals(exception.getMessage(), "vehicle already parked");
+        assertThrows(VehicleAlreadyParkedException.class, () -> parkingLot.park(vehicle));
     }
 
     @Test
@@ -63,8 +61,7 @@ class ParkingLotTest {
 
         parkingLot.park(vehicle);
 
-        Throwable exception = assertThrows(VehicleNotFoundException.class, () -> parkingLot.unPark(new Object()));
-        assertEquals(exception.getMessage(), "vehicle not found");
+        assertThrows(VehicleNotFoundException.class, () -> parkingLot.unPark(new Object()));
     }
 
     @Test
@@ -91,8 +88,7 @@ class ParkingLotTest {
         parkingLot.park(vehicle);
         parkingLot.unPark(vehicle);
 
-        Throwable exception = assertThrows(VehicleNotFoundException.class, () -> parkingLot.unPark(vehicle));
-        assertEquals(exception.getMessage(), "vehicle not found");
+        assertThrows(VehicleNotFoundException.class, () -> parkingLot.unPark(vehicle));
     }
 
     class DummyOwner implements INotification {
