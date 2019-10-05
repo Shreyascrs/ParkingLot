@@ -1,21 +1,22 @@
 package com.thoughtworks.parkinglot;
 
 import com.thoughtworks.parkinglot.exception.ParkingLotFullException;
+import com.thoughtworks.parkinglot.exception.PersonNotSubscribed;
 import com.thoughtworks.parkinglot.exception.VehicleAlreadyParkedException;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// TODO - make it green
 public class ParkingLot {
 
     private int capacity;
 
-
     List<INotification> notifiers;
     Set<Object> vehicles = new HashSet<>();
 
-    public ParkingLot(int capacity, List<INotification> owner) { // TODO - Both owner and security guard can also come right in the beginning.
+    public ParkingLot(int capacity, List<INotification> owner) {
         this.capacity = capacity;
         notifiers = owner;
     }
@@ -23,40 +24,49 @@ public class ParkingLot {
 
     public void park(Object object) throws ParkingLotFullException, VehicleAlreadyParkedException {
         if (isParkingLotFull()) {
-            throw new ParkingLotFullException("parking Lot is Full"); // TODO - strings
+            throw new ParkingLotFullException();
         }
 
         if (isParked(object)) {
-            throw new VehicleAlreadyParkedException("vehicle already parked");
+            throw new VehicleAlreadyParkedException();
         }
         vehicles.add(object);
-        if (isFull(capacity)) {
-
-            for (INotification notifier : notifiers) { // TODO - no abbreviations. Name loops, like we name conditions.
-                notifier.notifyWhenFull();
-            }
+        if (isFull()) {
+            notifyWhenFull();
         }
     }
 
-    private boolean isFull(int capacity) {
-        return vehicles.size() == capacity;
+    private void notifyWhenFull() {
+        for (INotification notifier : notifiers) {
+            notifier.notifyWhenFull();
+        }
     }
 
-    public Object unPark(Object vehicle) throws VehicleNotFoundExcepttion {
+    private boolean isFull() {
+        return vehicles.size() == this.capacity;
+    }
+
+    public Object unPark(Object vehicle) throws VehicleNotFoundException {
 
         if (isPresent(vehicle)) {
-            throw new VehicleNotFoundExcepttion("vehicle not found");
-        }
-        if (isFull(capacity)) {
-            vehicles.remove(vehicle);
-
-            for (INotification notifier : notifiers) {
-                notifier.notifyWhenEmpty();
-            }
-            return vehicle;
+            throw new VehicleNotFoundException();
         }
         vehicles.remove(vehicle);
+
+        if (isCapacityFull()) {
+            notifyWhenEmpty();
+        }
         return vehicle;
+    }
+
+    private boolean isCapacityFull() {
+        return notifiers.size()==capacity-1;
+    }
+
+    private void notifyWhenEmpty() {
+        for (INotification notifier : notifiers) {
+            notifier.notifyWhenEmpty();
+        }
     }
 
     private boolean isPresent(Object vehicle) {
@@ -71,7 +81,12 @@ public class ParkingLot {
         return vehicles.size() >= capacity;
     }
 
-    public void register(INotification object) {
+    public void subscribe(INotification notifier) {
+        notifiers.add(notifier);
+    }
 
+    public void unSubscribe(INotification notifier) throws PersonNotSubscribed {
+
+        notifiers.remove(notifier);
     }
 }

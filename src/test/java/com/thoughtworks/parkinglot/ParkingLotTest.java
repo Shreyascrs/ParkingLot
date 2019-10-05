@@ -63,7 +63,7 @@ class ParkingLotTest {
 
         parkingLot.park(vehicle);
 
-        Throwable exception = assertThrows(VehicleNotFoundExcepttion.class, () -> parkingLot.unPark(new Object()));
+        Throwable exception = assertThrows(VehicleNotFoundException.class, () -> parkingLot.unPark(new Object()));
         assertEquals(exception.getMessage(), "vehicle not found");
     }
 
@@ -91,7 +91,7 @@ class ParkingLotTest {
         parkingLot.park(vehicle);
         parkingLot.unPark(vehicle);
 
-        Throwable exception = assertThrows(VehicleNotFoundExcepttion.class, () -> parkingLot.unPark(vehicle));
+        Throwable exception = assertThrows(VehicleNotFoundException.class, () -> parkingLot.unPark(vehicle));
         assertEquals(exception.getMessage(), "vehicle not found");
     }
 
@@ -252,4 +252,45 @@ class ParkingLotTest {
         assertEquals(1, securityGuard.messageWhenEmpty);
     }
 
+    @Test
+    void givenParkingLot_WhenPersonSubscribes_ThenGetNotification() throws Exception {
+        SecurityGuard securityGuard = new SecurityGuard();
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
+        Object firstVehicle = new Object();
+
+        parkingLot.park(firstVehicle);
+        assertEquals(1, owner.messageWhenFull);
+
+        parkingLot.subscribe(securityGuard);
+        parkingLot.unPark(firstVehicle);
+        assertEquals(1, owner.messageWhenEmpty);
+        assertEquals(1, securityGuard.messageWhenEmpty);
+
+    }
+
+    @Test
+    void givenParkingLot_WhenPersonUnSubscribes_ThenMustNotGetNotification() throws Exception {
+        SecurityGuard securityGuard = new SecurityGuard();
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
+        Object firstVehicle = new Object();
+
+        parkingLot.park(firstVehicle);
+        assertEquals(1, owner.messageWhenFull);
+
+        parkingLot.subscribe(securityGuard);
+        parkingLot.unPark(firstVehicle);
+        assertEquals(1, owner.messageWhenEmpty);
+        assertEquals(1, securityGuard.messageWhenEmpty);
+
+        parkingLot.unSubscribe(securityGuard);
+        parkingLot.park(firstVehicle);
+        assertEquals(0, securityGuard.messageWhenFull);
+
+    }
 }
