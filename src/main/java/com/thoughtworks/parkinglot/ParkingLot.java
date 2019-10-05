@@ -13,12 +13,16 @@ public class ParkingLot {
 
     private int capacity;
 
-    List<INotification> notifiers;
-    Set<Object> vehicles = new HashSet<>();
+    public int getCapacity() {
+        return capacity;
+    }
 
-    public ParkingLot(int capacity, List<INotification> owner) {
+    private List<INotification> subscriber;
+    private Set<Object> vehicles = new HashSet<>();
+
+    public ParkingLot(int capacity, List<INotification> observer) {
         this.capacity = capacity;
-        notifiers = owner;
+        subscriber = observer;
     }
 
 
@@ -37,7 +41,7 @@ public class ParkingLot {
     }
 
     private void notifyWhenFull() {
-        for (INotification notifier : notifiers) {
+        for (INotification notifier : subscriber) {
             notifier.notifyWhenFull();
         }
     }
@@ -60,11 +64,11 @@ public class ParkingLot {
     }
 
     private boolean isCapacityFull() {
-        return notifiers.size()==capacity-1;
+        return subscriber.size()==capacity-1;
     }
 
     private void notifyWhenEmpty() {
-        for (INotification notifier : notifiers) {
+        for (INotification notifier : subscriber) {
             notifier.notifyWhenEmpty();
         }
     }
@@ -82,11 +86,11 @@ public class ParkingLot {
     }
 
     public void subscribe(INotification notifier) {
-        notifiers.add(notifier);
+        subscriber.add(notifier);
     }
 
     public void unSubscribe(INotification notifier) throws PersonNotSubscribed {
 
-        notifiers.remove(notifier);
+        subscriber.remove(notifier);
     }
 }
