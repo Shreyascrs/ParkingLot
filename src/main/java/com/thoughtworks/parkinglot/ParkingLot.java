@@ -3,29 +3,27 @@ package com.thoughtworks.parkinglot;
 import com.thoughtworks.parkinglot.exception.ParkingLotFullException;
 import com.thoughtworks.parkinglot.exception.VehicleAlreadyParkedException;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ParkingLot implements IParkingLotObserver {
+public class ParkingLot {
 
     private int capacity;
-    private Person owner;
 
-    List<Person> notifiers;
+
+    List<INotification> notifiers;
     Set<Object> vehicles = new HashSet<>();
 
-    public ParkingLot(int capacity, Person owner) {
+    public ParkingLot(int capacity, List<INotification> owner) { // TODO - Both owner and security guard can also come right in the beginning.
         this.capacity = capacity;
-        this.owner = owner;
-        notifiers = new ArrayList<>();
+        notifiers = owner;
     }
 
 
     public void park(Object object) throws ParkingLotFullException, VehicleAlreadyParkedException {
         if (isParkingLotFull()) {
-            throw new ParkingLotFullException("parking Lot is Full");
+            throw new ParkingLotFullException("parking Lot is Full"); // TODO - strings
         }
 
         if (isParked(object)) {
@@ -33,9 +31,9 @@ public class ParkingLot implements IParkingLotObserver {
         }
         vehicles.add(object);
         if (isFull(capacity)) {
-            owner.notifyWhenFull();
-            for (Person p : notifiers) {
-                p.notifyWhenFull();
+
+            for (INotification notifier : notifiers) { // TODO - no abbreviations. Name loops, like we name conditions.
+                notifier.notifyWhenFull();
             }
         }
     }
@@ -51,9 +49,9 @@ public class ParkingLot implements IParkingLotObserver {
         }
         if (isFull(capacity)) {
             vehicles.remove(vehicle);
-            owner.notifyWhenEmpty();
-            for (Person p : notifiers) {
-                p.notifyWhenEmpty();
+
+            for (INotification notifier : notifiers) {
+                notifier.notifyWhenEmpty();
             }
             return vehicle;
         }
@@ -65,10 +63,6 @@ public class ParkingLot implements IParkingLotObserver {
         return !(vehicles.contains(vehicle));
     }
 
-    private boolean isEmpty() {
-        return vehicles.size() == 0;
-    }
-
     private boolean isParked(Object object) {
         return vehicles.contains(object);
     }
@@ -77,8 +71,7 @@ public class ParkingLot implements IParkingLotObserver {
         return vehicles.size() >= capacity;
     }
 
-    @Override
-    public void register(Object object) {
-        notifiers.add((Person) object);
+    public void register(INotification object) {
+
     }
 }

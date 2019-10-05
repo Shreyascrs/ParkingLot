@@ -4,17 +4,20 @@ import com.thoughtworks.parkinglot.exception.ParkingLotFullException;
 import com.thoughtworks.parkinglot.exception.VehicleAlreadyParkedException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class ParkingLotTest {
 
-    Person owner = new Person();
-
-
     @Test
-    void givenParkingLot_WhenPark_ThenMustPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+    void givenParkingLot_WhenPark_ThenMustPark() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
 
         Object vehicle = new Object();
         parkingLot.park(vehicle);
@@ -23,8 +26,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotIsFull_WhenPark_ThenMustNotPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+    void givenParkingLotIsFull_WhenPark_ThenMustNotPark() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
 
         parkingLot.park(new Object());
 
@@ -33,8 +39,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithSameCars_WhenPark_ThenMustNotPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+    void givenParkingLotWithSameCars_WhenPark_ThenMustNotPark() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(2, notifierlist);
 
         Object vehicle = new Object();
 
@@ -45,8 +54,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithOneVehicleAndGivenOtherVehicleToUnpark_WhenUnPark_ThenMustNotUnPark() throws ParkingLotFullException, VehicleAlreadyParkedException {
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+    void givenParkingLotWithOneVehicleAndGivenOtherVehicleToUnpark_WhenUnPark_ThenMustNotUnPark() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
         Object vehicle = new Object();
 
         parkingLot.park(vehicle);
@@ -56,8 +68,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithOneVehicle_WhenUnPark_ThenMustUnPark() throws ParkingLotFullException, VehicleAlreadyParkedException, VehicleNotFoundExcepttion {
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+    void givenParkingLotWithOneVehicle_WhenUnPark_ThenMustUnPark() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
         Object vehicle = new Object();
 
         parkingLot.park(vehicle);
@@ -66,8 +81,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithOneVehicleMustUnparkAndOnceAgainUnpark_WhenUnPark_ThenMustThrowException() throws ParkingLotFullException, VehicleAlreadyParkedException, VehicleNotFoundExcepttion {
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+    void givenParkingLotWithOneVehicleMustUnparkAndOnceAgainUnpark_WhenUnPark_ThenMustThrowException() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
         Object vehicle = new Object();
 
         parkingLot.park(vehicle);
@@ -77,7 +95,7 @@ class ParkingLotTest {
         assertEquals(exception.getMessage(), "vehicle not found");
     }
 
-    class DummyOwner extends Person {
+    class DummyOwner implements INotification {
 
         private int messageWhenFull;
         private int messageWhenEmpty;
@@ -93,7 +111,7 @@ class ParkingLotTest {
         }
     }
 
-    class SecurityGuard extends Person {
+    class SecurityGuard implements INotification {
 
         private int messageWhenFull;
         private int messageWhenEmpty;
@@ -110,8 +128,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithTwoVehicles_WhenUnpark_ThenUnpark() throws VehicleAlreadyParkedException, ParkingLotFullException, VehicleNotFoundExcepttion {
-        ParkingLot parkingLot = new ParkingLot(3, owner);
+    void givenParkingLotWithTwoVehicles_WhenUnpark_ThenUnpark() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(3, notifierlist);
         Object vehicle1 = new Object();
         Object vehicle2 = new Object();
 
@@ -124,18 +145,22 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotfull_WhenPark_ThenOwnerMustGetMessage() throws Exception{
+    void givenParkingLotfull_WhenPark_ThenOwnerMustGetMessage() throws Exception {
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
 
         parkingLot.park(new Object());
 
     }
 
     @Test
-    void givenParkingLotfull_WhenPark_ThenhowManyTimesMethodCalled() throws Exception{
+    void givenParkingLotfull_WhenPark_ThenhowManyTimesMethodCalled() throws Exception {
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
 
         parkingLot.park(new Object());
         assertEquals(1, owner.messageWhenFull);
@@ -143,9 +168,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotFullParkedAndUnParked_WhenPark_ThenhowManyTimesMethodCalled() throws Exception{
+    void givenParkingLotFullParkedAndUnParked_WhenPark_ThenhowManyTimesMethodCalled() throws Exception {
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
         Object vehicle = new Object();
 
         parkingLot.park(vehicle);
@@ -158,9 +185,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenWhenTheParkingLotIsFullWhenVehicleRemoved_WhenUnPark_ThenSendNotification() throws Exception{
+    void givenWhenTheParkingLotIsFullWhenVehicleRemoved_WhenUnPark_ThenSendNotification() throws Exception {
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
         Object vehicle = new Object();
 
         parkingLot.park(vehicle);
@@ -169,9 +198,11 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenWhenTheParkingLotIsFullWhenVehicleremoved_WhenunPark_ThenSendNotification() throws Exception{
+    void givenWhenTheParkingLotIsFullWhenVehicleremoved_WhenunPark_ThenSendNotification() throws Exception {
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(4, owner);
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        ParkingLot parkingLot = new ParkingLot(4, notifierlist);
 
 
         Object vehicle1 = new Object();
@@ -195,16 +226,16 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenWhenTheParkingLotIsFullWhenVehicleremoved_WhenUnPark_ThenSendNotification() throws Exception{
+    void givenWhenTheParkingLotIsFullWhenVehicleremoved_WhenUnPark_ThenSendNotification() throws Exception {
+        SecurityGuard securityGuard = new SecurityGuard();
         DummyOwner owner = new DummyOwner();
-        SecurityGuard securityGuard=new SecurityGuard();
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        List<INotification> notifierlist = new ArrayList<>();
+        notifierlist.add(owner);
+        notifierlist.add(securityGuard);
+        ParkingLot parkingLot = new ParkingLot(2, notifierlist);
 
         Object firstVehicle = new Object();
         Object secondVehicle = new Object();
-
-        //to add a person
-        parkingLot.register(securityGuard);
 
         //adding vehicle
         parkingLot.park(firstVehicle);
