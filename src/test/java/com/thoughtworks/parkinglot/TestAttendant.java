@@ -7,12 +7,13 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class TestFirstAttendant {
+class TestAttendant {
 
-    @Test // TODO - update the name of the test.
-    void givenAttendantWithTwoParkingLot_WhenPark_ThenMustParkInSecondParkinglot() throws Exception {
+    @Test
+    void givenAttendantWithTwoParkingLot_WhenPark_ThenMustParkInMaximumCapacity() throws Exception {
         List<INotification> observer = new ArrayList<>();
         Object vehicle = new Object();
 
@@ -27,7 +28,7 @@ class TestFirstAttendant {
     }
 
     @Test
-    void givenAttendantWithTwoParkingLot_WhenPark_ThenMustParkInMostCapcity() throws Exception {
+    void givenAttendantWithTwoParkingLot_WhenPark_ThenMustParkInMostCapacity() throws Exception {
         DummyOwner owner = new DummyOwner();
         List<INotification> observer = new ArrayList<>();
         observer.add(owner);
@@ -56,7 +57,6 @@ class TestFirstAttendant {
         assertEquals(vehicle, firstParkingLot.unPark(vehicle));
         assertThrows(VehicleNotFoundException.class,()->secondParkingLot.unPark(vehicle));
     }
-
 
 
 }

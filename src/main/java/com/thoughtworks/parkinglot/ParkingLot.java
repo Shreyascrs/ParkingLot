@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// TODO - make it green
 public class ParkingLot {
 
     private final int capacity;
