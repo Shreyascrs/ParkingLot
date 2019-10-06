@@ -12,7 +12,7 @@ public class SecondAttendant implements IAttendant { // TODO - duplication
     }
 
     public void park(Object vehicle) throws Exception {
-        if (firstParkingLot.getAvailableSpace() <= secondParkingLot.getAvailableSpace()) {
+        if (firstParkingLot.getAvailableSpace() >= secondParkingLot.getAvailableSpace()) {
             firstParkingLot.park(vehicle);
         } else {
             secondParkingLot.park(vehicle);

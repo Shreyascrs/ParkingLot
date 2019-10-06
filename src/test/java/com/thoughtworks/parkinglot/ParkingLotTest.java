@@ -290,4 +290,18 @@ class ParkingLotTest {
         assertEquals(0, securityGuard.messageWhenFull);
 
     }
+
+    @Test
+    void givenAnParkingLotWithOneCapacity_WhenGetCapacity_ThenProvideCapacity() {
+        List<INotification> notifierlist = new ArrayList<>();
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
+        assertEquals(1, parkingLot.getCapacity());
+    }
+
+    @Test
+    void givenAnParkingLotWithOneCapacity_WhenGetAvailableSpace_ThenProvideAvailableSpace() {
+        List<INotification> notifierlist = new ArrayList<>();
+        ParkingLot parkingLot = new ParkingLot(1, notifierlist);
+        assertEquals(1, parkingLot.getAvailableSpace());
+    }
 }

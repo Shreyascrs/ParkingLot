@@ -9,13 +9,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestFirstAttendant {
+class TestFirstAttendant {
 
     @Test // TODO - update the name of the test.
     void givenAttendantWithTwoParkingLot_WhenPark_ThenMustParkInSecondParkinglot() throws Exception {
-        DummyOwner owner = new DummyOwner();
         List<INotification> observer = new ArrayList<>();
-        //observer.add(owner); // TODO - why we need the owner.
         Object vehicle = new Object();
 
         ParkingLot firstParkingLot = new ParkingLot(1, observer);
@@ -56,6 +54,7 @@ public class TestFirstAttendant {
         attendant.park(vehicle);
 
         assertEquals(vehicle, firstParkingLot.unPark(vehicle));
+        assertThrows(VehicleNotFoundException.class,()->secondParkingLot.unPark(vehicle));
     }
 
 

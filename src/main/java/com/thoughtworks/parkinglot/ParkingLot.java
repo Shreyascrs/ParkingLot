@@ -13,14 +13,14 @@ public class ParkingLot {
 
     private final int capacity;
 
-    public int getCapacity() { // TODO - test
+    public int getCapacity() {
         return capacity;
     }
 
     private List<INotification> subscriber;
     private Set<Object> vehicles = new HashSet<>();
 
-    // TODO - check if you have empty list test.
+
     public ParkingLot(int capacity, List<INotification> observer) {
         this.capacity = capacity;
         subscriber = observer;
@@ -99,6 +99,6 @@ public class ParkingLot {
     }
 
     public int getAvailableSpace() { // TODO - test
-        return vehicles.size() - capacity;
+        return capacity - vehicles.size();
     }
 }
