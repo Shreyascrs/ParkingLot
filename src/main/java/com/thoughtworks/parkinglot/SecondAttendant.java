@@ -1,20 +1,20 @@
 package com.thoughtworks.parkinglot;
 
-public class Attendant {
-
+public class SecondAttendant { // TODO - duplication
     private final ParkingLot firstParkingLot;
     private final ParkingLot secondParkingLot;
 
-    public Attendant(ParkingLot firstParkingLot, ParkingLot secondParkingLot) {
+    public SecondAttendant(ParkingLot firstParkingLot, ParkingLot secondParkingLot) {
         this.firstParkingLot = firstParkingLot;
         this.secondParkingLot = secondParkingLot;
     }
 
     public void park(Object vehicle) throws Exception {
-        if (firstParkingLot.getCapacity() < secondParkingLot.getCapacity()) {
-            secondParkingLot.park(vehicle);
-        } else {
+        if (firstParkingLot.getAvailableSpace() <= secondParkingLot.getAvailableSpace()) {
             firstParkingLot.park(vehicle);
+        } else {
+            secondParkingLot.park(vehicle);
         }
+
     }
 }

@@ -13,13 +13,14 @@ public class ParkingLot {
 
     private final int capacity;
 
-    int getCapacity() {
+    int getCapacity() { // TODO - test
         return capacity;
     }
 
     private List<INotification> subscriber;
     private Set<Object> vehicles = new HashSet<>();
 
+    // TODO - check if you have empty list test.
     public ParkingLot(int capacity, List<INotification> observer) {
         this.capacity = capacity;
         subscriber = observer;
@@ -64,7 +65,7 @@ public class ParkingLot {
     }
 
     private boolean isCapacityFull() {
-        return vehicles.size()==capacity-1;
+        return vehicles.size() == capacity - 1;
     }
 
     private void notifyWhenEmpty() {
@@ -90,10 +91,14 @@ public class ParkingLot {
     }
 
     public void unSubscribe(INotification notifier) throws PersonNotSubscribed {
-        if(subscriber.contains(notifier))
-        {subscriber.remove(notifier);}
-        else {
+        if (subscriber.contains(notifier)) {
+            subscriber.remove(notifier);
+        } else {
             throw new PersonNotSubscribed();
         }
+    }
+
+    int getAvailableSpace() { // TODO - test
+        return vehicles.size() - capacity;
     }
 }

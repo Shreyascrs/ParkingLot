@@ -10,6 +10,38 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+class DummyOwner implements INotification {
+
+    int messageWhenFull;
+    int messageWhenEmpty;
+
+    @Override
+    public void notifyWhenFull() {
+        messageWhenFull++;
+    }
+
+    @Override
+    public void notifyWhenEmpty() {
+        messageWhenEmpty++;
+    }
+}
+
+class SecurityGuard implements INotification {
+
+    int messageWhenFull;
+    int messageWhenEmpty;
+
+    @Override
+    public void notifyWhenFull() {
+        messageWhenFull++;
+    }
+
+    @Override
+    public void notifyWhenEmpty() {
+        messageWhenEmpty++;
+    }
+}
+
 class ParkingLotTest {
 
     @Test
@@ -91,37 +123,6 @@ class ParkingLotTest {
         assertThrows(VehicleNotFoundException.class, () -> parkingLot.unPark(vehicle));
     }
 
-    class DummyOwner implements INotification {
-
-        private int messageWhenFull;
-        private int messageWhenEmpty;
-
-        @Override
-        public void notifyWhenFull() {
-            messageWhenFull++;
-        }
-
-        @Override
-        public void notifyWhenEmpty() {
-            messageWhenEmpty++;
-        }
-    }
-
-    class SecurityGuard implements INotification {
-
-        private int messageWhenFull;
-        private int messageWhenEmpty;
-
-        @Override
-        public void notifyWhenFull() {
-            messageWhenFull++;
-        }
-
-        @Override
-        public void notifyWhenEmpty() {
-            messageWhenEmpty++;
-        }
-    }
 
     @Test
     void givenParkingLotWithTwoVehicles_WhenUnpark_ThenUnpark() throws Exception {
