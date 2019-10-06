@@ -13,7 +13,7 @@ public class ParkingLot {
 
     private final int capacity;
 
-    int getCapacity() { // TODO - test
+    public int getCapacity() { // TODO - test
         return capacity;
     }
 
@@ -98,7 +98,7 @@ public class ParkingLot {
         }
     }
 
-    int getAvailableSpace() { // TODO - test
+    public int getAvailableSpace() { // TODO - test
         return vehicles.size() - capacity;
     }
 }

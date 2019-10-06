@@ -1,11 +1,13 @@
-package com.thoughtworks.parkinglot;
+package com.thoughtworks.parkinglot.attendent;
 
-public class Attendant {
+import com.thoughtworks.parkinglot.ParkingLot;
+
+public class FirstAttendant implements IAttendant {
 
     private final ParkingLot firstParkingLot;
     private final ParkingLot secondParkingLot;
 
-    public Attendant(ParkingLot firstParkingLot, ParkingLot secondParkingLot) {
+    public FirstAttendant(ParkingLot firstParkingLot, ParkingLot secondParkingLot) {
         this.firstParkingLot = firstParkingLot;
         this.secondParkingLot = secondParkingLot;
     }

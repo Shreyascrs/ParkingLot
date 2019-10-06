@@ -1,6 +1,7 @@
 package com.thoughtworks.parkinglot;
 
-import org.junit.jupiter.api.Assertions;
+import com.thoughtworks.parkinglot.attendent.FirstAttendant;
+import com.thoughtworks.parkinglot.attendent.SecondAttendant;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestAttendant {
+public class TestFirstAttendant {
 
     @Test // TODO - update the name of the test.
     void givenAttendantWithTwoParkingLot_WhenPark_ThenMustParkInSecondParkinglot() throws Exception {
@@ -20,8 +21,8 @@ public class TestAttendant {
         ParkingLot firstParkingLot = new ParkingLot(1, observer);
         ParkingLot secondParkingLot = new ParkingLot(2, observer);
 
-        Attendant attendant = new Attendant(firstParkingLot, secondParkingLot);
-        attendant.park(vehicle);
+        FirstAttendant firstAttendant = new FirstAttendant(firstParkingLot, secondParkingLot);
+        firstAttendant.park(vehicle);
 
         assertEquals(vehicle, secondParkingLot.unPark(vehicle));
         assertThrows(VehicleNotFoundException.class,()->firstParkingLot.unPark(vehicle));
@@ -36,8 +37,8 @@ public class TestAttendant {
         ParkingLot firstParkingLot = new ParkingLot(2, observer);
         ParkingLot secondParkingLot = new ParkingLot(1, observer);
 
-        Attendant attendant = new Attendant(firstParkingLot, secondParkingLot);
-        attendant.park(vehicle);
+        FirstAttendant firstAttendant = new FirstAttendant(firstParkingLot, secondParkingLot);
+        firstAttendant.park(vehicle);
 
         assertEquals(vehicle, firstParkingLot.unPark(vehicle));
     }

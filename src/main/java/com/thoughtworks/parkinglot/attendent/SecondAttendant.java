@@ -1,6 +1,8 @@
-package com.thoughtworks.parkinglot;
+package com.thoughtworks.parkinglot.attendent;
 
-public class SecondAttendant { // TODO - duplication
+import com.thoughtworks.parkinglot.ParkingLot;
+
+public class SecondAttendant implements IAttendant { // TODO - duplication
     private final ParkingLot firstParkingLot;
     private final ParkingLot secondParkingLot;
 
